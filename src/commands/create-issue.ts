@@ -42,6 +42,7 @@ export const createIssueCommand = new Command("create-issue")
               options.labels
                 .split(",")
                 .map((name: string) => name.trim())
+                .filter((name: string) => name) // Remove empty strings
                 .map(async (name: string) => {
                   const label = await linear.findLabelByName(team.id, name)
                   if (!label) {

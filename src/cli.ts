@@ -2,6 +2,7 @@
 import { Command } from "commander"
 import { createIssueCommand } from "./commands/create-issue"
 import { listIssuesCommand } from "./commands/list-issues"
+import { updateIssueCommand } from "./commands/update-issue"
 
 const program = new Command()
   .name("linear")
@@ -10,4 +11,5 @@ const program = new Command()
 
 program.addCommand(listIssuesCommand)
 program.addCommand(createIssueCommand)
+program.addCommand(updateIssueCommand)
 program.parse()
