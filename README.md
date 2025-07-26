@@ -45,6 +45,13 @@ pnpm linear create-issue --title "Bug fix" --description "Fix login error" --sta
 pnpm linear update-issue M2-123 --title "Updated title" --state "In Progress" --assignee "none"
 ```
 
+### Move Issue
+
+```bash
+pnpm linear move-issue M2-123 "In Progress"
+pnpm linear move-issue M2-123 "Done"
+```
+
 ### Archive Issue
 
 ```bash

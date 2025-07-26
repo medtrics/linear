@@ -15,6 +15,7 @@ src/
 │   ├── list-issues.ts  # Lists project issues in table format
 │   ├── create-issue.ts # Creates new issues
 │   ├── update-issue.ts # Updates existing issues
+│   ├── move-issue.ts   # Moves issues between states
 │   ├── archive-issue.ts# Soft deletes (recoverable)
 │   └── delete-issue.ts # Hard deletes (permanent)
 └── lib/                # Core utilities
@@ -58,6 +59,14 @@ src/
 - Requires at least one update option
 - Special: `--assignee none` to unassign
 - Labels replace existing (not append)
+
+### move-issue <issueId> <state>
+
+- Moves issue to specified workflow state
+- Shows current state before moving
+- Validates target state exists
+- Detects if already in target state
+- State names are case-insensitive
 
 ### archive-issue <issueId>
 
