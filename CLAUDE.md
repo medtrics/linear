@@ -54,28 +54,32 @@ src/
 - Optional: `--description`, `--state`, `--labels` (comma-separated), `--assignee` (email)
 - Validates all inputs against team data
 
-### update-issue <issueId>
+### update-issue
 
+- Required: `--issue/-i <issueId>`
 - Requires at least one update option
 - Special: `--assignee none` to unassign
 - Labels replace existing (not append)
 
-### move-issue <issueId> <state>
+### move-issue
 
+- Required: `--issue/-i <issueId>`, `--state/-s <state>`
 - Moves issue to specified workflow state
 - Shows current state before moving
 - Validates target state exists
 - Detects if already in target state
 - State names are case-insensitive
 
-### archive-issue <issueId>
+### archive-issue
 
+- Required: `--issue/-i <issueId>`
 - Soft delete with confirmation
 - `--force` skips confirmation
 - Can be restored via Linear UI
 
-### delete-issue <issueId>
+### delete-issue
 
+- Required: `--issue/-i <issueId>`
 - PERMANENT deletion
 - Double confirmation required
 - `--force` skips confirmation

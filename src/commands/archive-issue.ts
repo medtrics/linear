@@ -11,12 +11,12 @@ import {
 
 export const archiveIssueCommand = new Command("archive-issue")
   .description("Archive an issue in Linear (can be restored later)")
-  .argument("<issueId>", "Issue ID (e.g., M2-123)")
+  .requiredOption("-i, --issue <issueId>", "Issue ID (e.g., M2-123)")
   .option("-f, --force", "Skip confirmation prompt")
   .action(
-    withErrorHandling(async (issueId, options) => {
+    withErrorHandling(async (options) => {
       // Get the issue first to ensure it exists and show details
-      const issue = await linear.getIssueOrThrow(issueId)
+      const issue = await linear.getIssueOrThrow(options.issue)
 
       // Show issue details before archiving
       showIssueDetails(issue, "archive")
@@ -34,7 +34,7 @@ export const archiveIssueCommand = new Command("archive-issue")
       }
 
       // Archive the issue
-      await linear.archiveIssue(issueId)
+      await linear.archiveIssue(options.issue)
 
       logSuccess(`Issue archived: ${issue.identifier} - ${issue.title}`)
       logNote("The issue can be restored from Linear's archived issues view.")

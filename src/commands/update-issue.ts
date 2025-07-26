@@ -11,7 +11,7 @@ import {
 
 export const updateIssueCommand = new Command("update-issue")
   .description("Update an existing issue in Linear")
-  .argument("<issueId>", "Issue ID (e.g., M2-123)")
+  .requiredOption("-i, --issue <issueId>", "Issue ID (e.g., M2-123)")
   .option("-t, --title <title>", "New issue title")
   .option("-d, --description <description>", "New issue description")
   .option(
@@ -24,7 +24,7 @@ export const updateIssueCommand = new Command("update-issue")
   )
   .option("-s, --state <state>", "New state (e.g., In Progress, Done)")
   .action(
-    withErrorHandling(async (issueId, options) => {
+    withErrorHandling(async (options) => {
       // Validate that at least one update option is provided
       const hasUpdates =
         options.title ||
@@ -40,7 +40,7 @@ export const updateIssueCommand = new Command("update-issue")
       }
 
       // Get the issue first to ensure it exists
-      const issue = await linear.getIssueOrThrow(issueId)
+      const issue = await linear.getIssueOrThrow(options.issue)
       const team = await issue.team
 
       if (!team) {
@@ -68,7 +68,7 @@ export const updateIssueCommand = new Command("update-issue")
       if (state) params.stateId = state.id
 
       // Update the issue
-      const updatedIssue = await linear.updateIssue(issueId, params)
+      const updatedIssue = await linear.updateIssue(options.issue, params)
 
       logSuccess(
         `Issue updated: ${updatedIssue.identifier} - ${updatedIssue.title}`,

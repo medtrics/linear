@@ -15,12 +15,12 @@ export const deleteIssueCommand = new Command("delete-issue")
   .description(
     "Permanently delete an issue from Linear (THIS CANNOT BE UNDONE)",
   )
-  .argument("<issueId>", "Issue ID (e.g., M2-123)")
+  .requiredOption("-i, --issue <issueId>", "Issue ID (e.g., M2-123)")
   .option("-f, --force", "Skip confirmation prompt")
   .action(
-    withErrorHandling(async (issueId, options) => {
+    withErrorHandling(async (options) => {
       // Get the issue first to ensure it exists and show details
-      const issue = await linear.getIssueOrThrow(issueId)
+      const issue = await linear.getIssueOrThrow(options.issue)
 
       // Show issue details before deletion with warnings
       logDanger("PERMANENT DELETION WARNING ⚠️")
@@ -59,7 +59,7 @@ export const deleteIssueCommand = new Command("delete-issue")
       }
 
       // Permanently delete the issue
-      await linear.deleteIssue(issueId)
+      await linear.deleteIssue(options.issue)
 
       logSuccess(
         `Issue permanently deleted: ${issue.identifier} - ${issue.title}`,

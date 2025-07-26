@@ -77,13 +77,13 @@ Modify an existing issue:
 
 ```bash
 # Update title and state
-pnpm linear update-issue M2-123 --title "Updated title" --state "In Review"
+pnpm linear update-issue --issue M2-123 --title "Updated title" --state "In Review"
 
 # Unassign an issue
-pnpm linear update-issue M2-123 --assignee none
+pnpm linear update-issue -i M2-123 --assignee none
 
 # Replace all labels
-pnpm linear update-issue M2-123 --labels "Bug,Critical"
+pnpm linear update-issue -i M2-123 --labels "Bug,Critical"
 ```
 
 ### Move Issue
@@ -91,8 +91,8 @@ pnpm linear update-issue M2-123 --labels "Bug,Critical"
 Quickly change an issue's workflow state:
 
 ```bash
-pnpm linear move-issue M2-123 "In Progress"
-pnpm linear move-issue M2-123 "Done"
+pnpm linear move-issue --issue M2-123 --state "In Progress"
+pnpm linear move-issue -i M2-123 -s "Done"
 ```
 
 ### Archive Issue
@@ -101,10 +101,10 @@ Soft delete an issue (can be restored in Linear):
 
 ```bash
 # With confirmation prompt
-pnpm linear archive-issue M2-123
+pnpm linear archive-issue --issue M2-123
 
 # Skip confirmation
-pnpm linear archive-issue M2-123 --force
+pnpm linear archive-issue -i M2-123 --force
 ```
 
 ### Delete Issue
@@ -113,10 +113,10 @@ pnpm linear archive-issue M2-123 --force
 
 ```bash
 # With double confirmation
-pnpm linear delete-issue M2-123
+pnpm linear delete-issue --issue M2-123
 
 # Skip confirmation (use with caution!)
-pnpm linear delete-issue M2-123 --force
+pnpm linear delete-issue -i M2-123 --force
 ```
 
 ### Help

@@ -11,12 +11,15 @@ import {
 
 export const moveIssueCommand = new Command("move-issue")
   .description("Move an issue to a different state")
-  .argument("<issueId>", "Issue ID (e.g., M2-123)")
-  .argument("<state>", "Target state (e.g., 'In Progress', 'Done')")
+  .requiredOption("-i, --issue <issueId>", "Issue ID (e.g., M2-123)")
+  .requiredOption(
+    "-s, --state <state>",
+    "Target state (e.g., 'In Progress', 'Done')",
+  )
   .action(
-    withErrorHandling(async (issueId, stateName) => {
+    withErrorHandling(async (options) => {
       // Get the issue first to ensure it exists
-      const issue = await linear.getIssueOrThrow(issueId)
+      const issue = await linear.getIssueOrThrow(options.issue)
       const team = await issue.team
 
       if (!team) {
@@ -36,10 +39,10 @@ export const moveIssueCommand = new Command("move-issue")
       }
 
       // Find the target state
-      const targetState = await linear.findStateByName(team.id, stateName)
+      const targetState = await linear.findStateByName(team.id, options.state)
       if (!targetState) {
         throw new LinearCLIError(
-          `State "${stateName}" not found in team`,
+          `State "${options.state}" not found in team`,
           ERROR_CODES.STATE_NOT_FOUND,
         )
       }
@@ -51,7 +54,7 @@ export const moveIssueCommand = new Command("move-issue")
       }
 
       // Move the issue
-      const updatedIssue = await linear.updateIssue(issueId, {
+      const updatedIssue = await linear.updateIssue(options.issue, {
         stateId: targetState.id,
       })
 
