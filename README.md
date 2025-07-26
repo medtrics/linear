@@ -28,26 +28,31 @@ Get your API key from: https://linear.app/settings/api
 ## Usage
 
 ### List Issues
+
 ```bash
 pnpm linear list-issues
 ```
 
 ### Create Issue
+
 ```bash
 pnpm linear create-issue --title "Bug fix" --description "Fix login error" --state "Backlog" --labels "Bug,Backend" --assignee "user@example.com"
 ```
 
 ### Update Issue
+
 ```bash
 pnpm linear update-issue M2-123 --title "Updated title" --state "In Progress" --assignee "none"
 ```
 
 ### Archive Issue
+
 ```bash
 pnpm linear archive-issue M2-123
 ```
 
 ### Delete Issue (Permanent)
+
 ```bash
 pnpm linear delete-issue M2-123
 ```

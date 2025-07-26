@@ -1,11 +1,13 @@
 # Linear CLI - AI Agent Documentation
 
 ## Project Overview
+
 TypeScript CLI for Linear API. Organization: Medtrics. Repository: github.com/medtrics/linear.
 
 ## Architecture
 
 ### Directory Structure
+
 ```
 src/
 ├── cli.ts              # Entry point, command registration
@@ -26,6 +28,7 @@ src/
 ```
 
 ## Technology Stack
+
 - **Runtime**: Node.js with tsx
 - **Language**: TypeScript (strict mode)
 - **Package Manager**: pnpm (REQUIRED)
@@ -39,26 +42,31 @@ src/
 ## Commands
 
 ### list-issues
+
 - Shows issues in table: ID, Title, State, Labels, Assignee
 - Filters by current project (from env)
 - Parallel data fetching for performance
 
 ### create-issue
+
 - Required: `--title`
 - Optional: `--description`, `--state`, `--labels` (comma-separated), `--assignee` (email)
 - Validates all inputs against team data
 
 ### update-issue <issueId>
+
 - Requires at least one update option
 - Special: `--assignee none` to unassign
 - Labels replace existing (not append)
 
 ### archive-issue <issueId>
+
 - Soft delete with confirmation
 - `--force` skips confirmation
 - Can be restored via Linear UI
 
 ### delete-issue <issueId>
+
 - PERMANENT deletion
 - Double confirmation required
 - `--force` skips confirmation
@@ -67,20 +75,23 @@ src/
 ## Code Patterns
 
 ### Error Handling
+
 ```typescript
 try {
   // operation
 } catch (error) {
-  handleError(error) // Centralized handler
+  handleError(error); // Centralized handler
 }
 ```
 
 ### Async Operations
+
 - Use Promise.all for parallel operations
 - Helper methods return typed promises
 - No blocking sequential operations
 
 ### Logging
+
 - `log()` - Raw output
 - `logInfo()` - Information with newline
 - `logSuccess()` - Success with checkmark
@@ -93,6 +104,7 @@ try {
 - NO direct console.log usage
 
 ### Type Safety
+
 - Strict TypeScript configuration
 - Use SDK types, avoid `any`
 - Helper functions are strongly typed
@@ -100,6 +112,7 @@ try {
 ## Development Workflow
 
 ### Setup
+
 ```bash
 pnpm install
 cp .env.example .env.local
@@ -107,21 +120,25 @@ cp .env.example .env.local
 ```
 
 ### Commands
+
 - `pnpm linear <command>` - Run CLI
 - `pnpm check` - Lint + typecheck
 - `pnpm format` - Format code
 - `pnpm prepare` - Setup git hooks
 
 ### Git Workflow
+
 1. Make changes
 2. `pnpm check` runs automatically on commit
 3. Commit with conventional format
 4. Push to main branch
 
 ## Commit Conventions
+
 Format: `type(scope): description`
 
 Types:
+
 - `feat:` New feature
 - `fix:` Bug fix
 - `refactor:` Code restructuring
@@ -130,6 +147,7 @@ Types:
 - `chore:` Maintenance
 
 Examples:
+
 - `feat: add create-issue command`
 - `fix: handle missing assignee error`
 - `refactor: extract label parsing logic`
@@ -137,18 +155,21 @@ Examples:
 ## Configuration Files
 
 ### tsconfig.json
+
 - Target: ESNext
 - Module: ESNext
 - Strict: true
 - No emit (tsx handles compilation)
 
 ### biome.json
+
 - 2-space indentation
 - Double quotes
 - No unused imports/variables
 - Import organization enabled
 
 ### .env.local
+
 ```env
 LINEAR_API_KEY=lin_api_xxxx
 LINEAR_TEAM_NAME=Team Name
@@ -158,39 +179,46 @@ LINEAR_PROJECT_NAME=Project Name
 ## Key Implementation Details
 
 ### Environment Loading
+
 - Uses dotenv with .env.local
 - Required vars validated on startup
 - Clear error messages for missing config
 
 ### Linear API Client
+
 - Singleton instance
 - Methods wrap SDK calls with error handling
 - Cache for team/project lookups
 - Helper methods for common operations
 
 ### Command Structure
+
 - Each command is separate file
 - Imports from "../lib" barrel
 - Consistent error handling pattern
 - Validation before API calls
 
 ### DRY Principles
+
 - `askConfirmation()` in prompts.ts
 - `parseLabelIds()` in utils.ts
 - `showIssueDetails()` for consistent display
 - Logging helpers prevent console.log repetition
 
 ## Testing Approach
+
 Manual testing via CLI. No automated tests yet.
 Verify with `pnpm check` before committing.
 
 ## Future Considerations
+
 - Add automated tests
 - Implement issue filtering options
 - Add batch operations
 - Consider adding issue templates
 
 ## Important Notes
+
 - Always use pnpm, not npm or yarn
 - Run `pnpm check` before committing
 - Follow existing patterns for new commands
