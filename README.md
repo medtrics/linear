@@ -26,7 +26,7 @@ pnpm install
 
 ## Prerequisites
 
-- Node.js 20+
+- Node.js 18+
 - pnpm (install with `npm install -g pnpm`)
 - Linear account with API access
 

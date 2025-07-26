@@ -1,7 +1,7 @@
 {
-  "name": "linear",
-  "version": "1.0.0",
-  "description": "Linear CLI",
+  "name": "@medtrics/linear",
+  "version": "0.1.0",
+  "description": "TypeScript CLI for Linear API",
   "author": "Medtrics",
   "license": "MIT",
   "homepage": "https://github.com/medtrics/linear",
@@ -9,10 +9,40 @@
     "type": "git",
     "url": "https://github.com/medtrics/linear"
   },
+  "bugs": {
+    "url": "https://github.com/medtrics/linear/issues"
+  },
+  "keywords": [
+    "linear",
+    "cli",
+    "medtrics",
+    "typescript",
+    "api"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "linear": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "prepare": "husky",
     "check": "concurrently -n 'biome,tsc' -c 'magenta,cyan' 'biome check --write .' 'tsc --noEmit'",
     "format": "concurrently -n 'biome,prettier' -c 'magenta,cyan' 'biome format --write .' 'prettier --write **/*.md'",
+    "build": "rimraf dist && tsup",
+    "prepublishOnly": "pnpm check && pnpm build",
     "linear": "tsx src/cli.ts"
   },
   "dependencies": {
@@ -29,6 +59,8 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }

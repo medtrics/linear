@@ -1,4 +1,4 @@
-#!/usr/bin/env tsx
+#!/usr/bin/env node
 import { Command } from "commander"
 import { archiveIssueCommand } from "./commands/archive-issue"
 import { createIssueCommand } from "./commands/create-issue"
@@ -10,7 +10,7 @@ import { updateIssueCommand } from "./commands/update-issue"
 const program = new Command()
   .name("linear")
   .description("Linear CLI")
-  .version("1.0.0")
+  .version(process.env.npm_package_version || "0.1.0")
 
 program.addCommand(listIssuesCommand)
 program.addCommand(createIssueCommand)
