@@ -1,5 +1,5 @@
 import { Command } from "commander"
-import { createTable, handleError, linear, logInfo } from "../lib"
+import { createTable, handleError, linear, log, logInfo } from "../lib"
 
 export const listIssuesCommand = new Command("list-issues")
   .description("List all issues from the Linear project")
@@ -46,7 +46,7 @@ export const listIssuesCommand = new Command("list-issues")
       rows.forEach((row) => table.push(row))
 
       logInfo(`Project: ${project.name} - ${issues.nodes.length} issues`)
-      console.log(table.toString())
+      log(table.toString())
     } catch (error) {
       handleError(error)
     }

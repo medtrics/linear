@@ -101,4 +101,16 @@ export const linear = {
     if (!issue) throw new Error("Failed to update issue")
     return issue
   },
+
+  async archiveIssue(id: string) {
+    const result = await client.archiveIssue(id)
+    if (!result.success) throw new Error("Failed to archive issue")
+    return result
+  },
+
+  async deleteIssue(id: string) {
+    const result = await client.deleteIssue(id)
+    if (!result.success) throw new Error("Failed to delete issue")
+    return result
+  },
 }

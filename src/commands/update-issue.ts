@@ -1,5 +1,12 @@
 import { Command } from "commander"
-import { handleError, LinearCLIError, linear, logSuccess } from "../lib"
+import {
+  handleError,
+  LinearCLIError,
+  linear,
+  logSuccess,
+  logUrl,
+  parseLabelIds,
+} from "../lib"
 
 export const updateIssueCommand = new Command("update-issue")
   .description("Update an existing issue in Linear")
@@ -66,24 +73,7 @@ export const updateIssueCommand = new Command("update-issue")
           : null,
 
         // Find labels if provided
-        options.labels
-          ? Promise.all(
-              options.labels
-                .split(",")
-                .map((name: string) => name.trim())
-                .filter((name: string) => name) // Remove empty strings
-                .map(async (name: string) => {
-                  const label = await linear.findLabelByName(team.id, name)
-                  if (!label) {
-                    throw new LinearCLIError(
-                      `Label "${name}" not found in team`,
-                      "LABEL_NOT_FOUND",
-                    )
-                  }
-                  return label.id
-                }),
-            )
-          : null,
+        options.labels ? parseLabelIds(team.id, options.labels) : null,
 
         // Find state if provided
         options.state
@@ -110,7 +100,7 @@ export const updateIssueCommand = new Command("update-issue")
       logSuccess(
         `Issue updated: ${updatedIssue.identifier} - ${updatedIssue.title}`,
       )
-      console.log(`View at: ${updatedIssue.url}`)
+      logUrl("View at", updatedIssue.url)
     } catch (error) {
       handleError(error)
     }
