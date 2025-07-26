@@ -7,7 +7,7 @@
   "homepage": "https://github.com/medtrics/linear",
   "repository": {
     "type": "git",
-    "url": "https://github.com/medtrics/linear"
+    "url": "git+https://github.com/medtrics/linear.git"
   },
   "bugs": {
     "url": "https://github.com/medtrics/linear/issues"
@@ -27,7 +27,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "linear": "./dist/cli.js"
+    "linear": "dist/cli.js"
   },
   "files": [
     "dist",
