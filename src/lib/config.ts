@@ -4,17 +4,17 @@ import { assertConfig } from "./errors"
 loadEnv({ path: ".env.local" })
 
 const apiKey = process.env.LINEAR_API_KEY
-const teamId = process.env.LINEAR_TEAM_ID
-const projectId = process.env.LINEAR_PROJECT_ID
+const teamName = process.env.LINEAR_TEAM_NAME
+const projectName = process.env.LINEAR_PROJECT_NAME
 
 assertConfig(apiKey, "LINEAR_API_KEY")
-assertConfig(teamId, "LINEAR_TEAM_ID")
-assertConfig(projectId, "LINEAR_PROJECT_ID")
+assertConfig(teamName, "LINEAR_TEAM_NAME")
+assertConfig(projectName, "LINEAR_PROJECT_NAME")
 
 export const config = {
   linear: {
     apiKey,
-    teamId,
-    projectId,
+    teamName,
+    projectName,
   },
 } as const
