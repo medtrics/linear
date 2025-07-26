@@ -6,26 +6,44 @@ export const listIssuesCommand = new Command("list-issues")
   .action(async () => {
     try {
       const project = await linear.getCurrentProject()
-      const issues = await project.issues()
+
+      // Fetch issues with all related data in a single query
+      const issues = await project.issues({
+        includeArchived: false,
+      })
 
       const table = createTable([
         { header: "ID", width: 10 },
-        { header: "Title", width: 50 },
+        { header: "Title", width: 40 },
         { header: "State", width: 15 },
+        { header: "Labels", width: 15 },
         { header: "Assignee", width: 20 },
       ])
 
-      for (const issue of issues.nodes) {
-        const state = await issue.state
-        const assignee = await issue.assignee
+      // Process all issues in parallel for better performance
+      const rows = await Promise.all(
+        issues.nodes.map(async (issue) => {
+          const [state, assignee, labels] = await Promise.all([
+            issue.state,
+            issue.assignee,
+            issue.labels(),
+          ])
 
-        table.push([
-          issue.identifier,
-          issue.title,
-          state?.name || "Unknown",
-          assignee?.name || "Unassigned",
-        ])
-      }
+          // Format labels as comma-separated list
+          const labelNames =
+            labels.nodes.map((label) => label.name).join(", ") || "-"
+
+          return [
+            issue.identifier,
+            issue.title,
+            state?.name || "Unknown",
+            labelNames,
+            assignee?.name || "Unassigned",
+          ]
+        }),
+      )
+
+      rows.forEach((row) => table.push(row))
 
       logInfo(`Project: ${project.name} - ${issues.nodes.length} issues`)
       console.log(table.toString())
