@@ -1,0 +1,16 @@
+{
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.defaultFormatter": "biomejs.biome",
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "*.mdc": "markdown"
+  },
+  "workbench.editorAssociations": {
+    "*.mdc": "default"
+  }
+}

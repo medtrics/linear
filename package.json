@@ -1,0 +1,35 @@
+{
+  "name": "linear",
+  "version": "1.0.0",
+  "description": "Linear CLI",
+  "author": "Medtrics",
+  "license": "MIT",
+  "homepage": "https://github.com/medtrics/linear",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medtrics/linear"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "check": "concurrently -n 'biome,tsc' -c 'magenta,cyan' 'biome check --write .' 'tsc --noEmit'",
+    "format": "concurrently -n 'biome,prettier' -c 'magenta,cyan' 'biome format --write .' 'prettier --write **/*.md'",
+    "linear": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@linear/sdk": "^53.0.0",
+    "cli-table3": "^0.6.5",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "concurrently": "^9.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
