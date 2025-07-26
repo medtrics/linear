@@ -67,6 +67,24 @@ export const linear = {
     return (await team.states()).nodes
   },
 
+  async findUserByEmail(teamId: string, email: string) {
+    const team = await client.team(teamId)
+    const members = await team.members()
+    return members.nodes.find((user) => user.email === email)
+  },
+
+  async findLabelByName(teamId: string, name: string) {
+    const labels = await this.getLabels(teamId)
+    return labels.find((label) => label.name === name)
+  },
+
+  async findStateByName(teamId: string, name: string) {
+    const states = await this.getStates(teamId)
+    return states.find(
+      (state) => state.name.toLowerCase() === name.toLowerCase(),
+    )
+  },
+
   async createIssue(params: Parameters<typeof client.createIssue>[0]) {
     const result = await client.createIssue(params)
     const issue = await result.issue
