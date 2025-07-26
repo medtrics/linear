@@ -1,5 +1,11 @@
+export {
+  parseAssignee,
+  parseIssueOptions,
+  parseState,
+  withErrorHandling,
+} from "./command-helpers"
 export { config } from "./config"
-export { handleError, LinearCLIError } from "./errors"
+export { ERROR_CODES, handleError, LinearCLIError } from "./errors"
 export { linear } from "./linear"
 export {
   createTable,
@@ -14,4 +20,3 @@ export {
   logWarning,
 } from "./output"
 export { askConfirmation, showIssueDetails } from "./prompts"
-export { parseLabelIds } from "./utils"

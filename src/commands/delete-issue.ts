@@ -1,7 +1,6 @@
 import { Command } from "commander"
 import {
   askConfirmation,
-  handleError,
   linear,
   log,
   logDanger,
@@ -9,6 +8,7 @@ import {
   logInfo,
   logSuccess,
   logWarning,
+  withErrorHandling,
 } from "../lib"
 
 export const deleteIssueCommand = new Command("delete-issue")
@@ -17,10 +17,10 @@ export const deleteIssueCommand = new Command("delete-issue")
   )
   .argument("<issueId>", "Issue ID (e.g., M2-123)")
   .option("-f, --force", "Skip confirmation prompt")
-  .action(async (issueId, options) => {
-    try {
+  .action(
+    withErrorHandling(async (issueId, options) => {
       // Get the issue first to ensure it exists and show details
-      const issue = await linear.getIssue(issueId)
+      const issue = await linear.getIssueOrThrow(issueId)
 
       // Show issue details before deletion with warnings
       logDanger("PERMANENT DELETION WARNING ⚠️")
@@ -65,7 +65,5 @@ export const deleteIssueCommand = new Command("delete-issue")
         `Issue permanently deleted: ${issue.identifier} - ${issue.title}`,
       )
       logWarning("This action cannot be undone.")
-    } catch (error) {
-      handleError(error)
-    }
-  })
+    }),
+  )

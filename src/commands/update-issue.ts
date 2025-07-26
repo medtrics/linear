@@ -1,11 +1,12 @@
 import { Command } from "commander"
 import {
-  handleError,
+  ERROR_CODES,
   LinearCLIError,
   linear,
   logSuccess,
   logUrl,
-  parseLabelIds,
+  parseIssueOptions,
+  withErrorHandling,
 } from "../lib"
 
 export const updateIssueCommand = new Command("update-issue")
@@ -22,8 +23,8 @@ export const updateIssueCommand = new Command("update-issue")
     "New comma-separated list of label names (replaces existing)",
   )
   .option("-s, --state <state>", "New state (e.g., In Progress, Done)")
-  .action(async (issueId, options) => {
-    try {
+  .action(
+    withErrorHandling(async (issueId, options) => {
       // Validate that at least one update option is provided
       const hasUpdates =
         options.title ||
@@ -34,18 +35,18 @@ export const updateIssueCommand = new Command("update-issue")
       if (!hasUpdates) {
         throw new LinearCLIError(
           "No updates provided. Use at least one option to update the issue",
-          "NO_UPDATES",
+          ERROR_CODES.NO_UPDATES,
         )
       }
 
       // Get the issue first to ensure it exists
-      const issue = await linear.getIssue(issueId)
+      const issue = await linear.getIssueOrThrow(issueId)
       const team = await issue.team
 
       if (!team) {
         throw new LinearCLIError(
           "Could not find team for this issue",
-          "TEAM_NOT_FOUND",
+          ERROR_CODES.TEAM_NOT_FOUND,
         )
       }
 
@@ -55,39 +56,11 @@ export const updateIssueCommand = new Command("update-issue")
       if (options.title) params.title = options.title
       if (options.description) params.description = options.description
 
-      // Process all optional parameters in parallel for better performance
-      const [assignee, labelIds, state] = await Promise.all([
-        // Find assignee if provided
-        options.assignee
-          ? options.assignee === "none"
-            ? { id: null } // Special case to unassign
-            : linear.findUserByEmail(team.id, options.assignee).then((user) => {
-                if (!user) {
-                  throw new LinearCLIError(
-                    `User with email "${options.assignee}" not found in team`,
-                    "USER_NOT_FOUND",
-                  )
-                }
-                return user
-              })
-          : null,
-
-        // Find labels if provided
-        options.labels ? parseLabelIds(team.id, options.labels) : null,
-
-        // Find state if provided
-        options.state
-          ? linear.findStateByName(team.id, options.state).then((state) => {
-              if (!state) {
-                throw new LinearCLIError(
-                  `State "${options.state}" not found in team`,
-                  "STATE_NOT_FOUND",
-                )
-              }
-              return state
-            })
-          : null,
-      ])
+      // Process all optional parameters in parallel
+      const { assignee, labelIds, state } = await parseIssueOptions(
+        team.id,
+        options,
+      )
 
       // Apply the found values to params
       if (assignee) params.assigneeId = assignee.id
@@ -101,7 +74,5 @@ export const updateIssueCommand = new Command("update-issue")
         `Issue updated: ${updatedIssue.identifier} - ${updatedIssue.title}`,
       )
       logUrl("View at", updatedIssue.url)
-    } catch (error) {
-      handleError(error)
-    }
-  })
+    }),
+  )

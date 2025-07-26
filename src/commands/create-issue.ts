@@ -1,11 +1,10 @@
 import { Command } from "commander"
 import {
-  handleError,
-  LinearCLIError,
   linear,
   logSuccess,
   logUrl,
-  parseLabelIds,
+  parseIssueOptions,
+  withErrorHandling,
 } from "../lib"
 
 export const createIssueCommand = new Command("create-issue")
@@ -15,8 +14,8 @@ export const createIssueCommand = new Command("create-issue")
   .option("-a, --assignee <email>", "Assignee email")
   .option("-l, --labels <labels>", "Comma-separated list of label names")
   .option("-s, --state <state>", "Initial state (e.g., Backlog, Todo)")
-  .action(async (options) => {
-    try {
+  .action(
+    withErrorHandling(async (options) => {
       const team = await linear.getCurrentTeam()
       const project = await linear.getCurrentProject()
 
@@ -28,37 +27,11 @@ export const createIssueCommand = new Command("create-issue")
         projectId: project.id,
       }
 
-      // Process all optional parameters in parallel for better performance
-      const [assignee, labelIds, state] = await Promise.all([
-        // Find assignee if provided
-        options.assignee
-          ? linear.findUserByEmail(team.id, options.assignee).then((user) => {
-              if (!user) {
-                throw new LinearCLIError(
-                  `User with email "${options.assignee}" not found in team`,
-                  "USER_NOT_FOUND",
-                )
-              }
-              return user
-            })
-          : null,
-
-        // Find labels if provided
-        options.labels ? parseLabelIds(team.id, options.labels) : null,
-
-        // Find state if provided
-        options.state
-          ? linear.findStateByName(team.id, options.state).then((state) => {
-              if (!state) {
-                throw new LinearCLIError(
-                  `State "${options.state}" not found in team`,
-                  "STATE_NOT_FOUND",
-                )
-              }
-              return state
-            })
-          : null,
-      ])
+      // Process all optional parameters in parallel
+      const { assignee, labelIds, state } = await parseIssueOptions(
+        team.id,
+        options,
+      )
 
       // Apply the found values to params
       if (assignee) params.assigneeId = assignee.id
@@ -70,7 +43,5 @@ export const createIssueCommand = new Command("create-issue")
 
       logSuccess(`Issue created: ${issue.identifier} - ${issue.title}`)
       logUrl("View at", issue.url)
-    } catch (error) {
-      handleError(error)
-    }
-  })
+    }),
+  )

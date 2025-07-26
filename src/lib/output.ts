@@ -5,6 +5,17 @@ export interface TableColumn {
   width?: number
 }
 
+/**
+ * Creates a formatted table for CLI output
+ * @param columns - Array of column definitions with headers and optional widths
+ * @returns cli-table3 instance ready for adding rows
+ * @example
+ * const table = createTable([
+ *   { header: "ID", width: 10 },
+ *   { header: "Title", width: 40 }
+ * ])
+ * table.push(["M2-123", "Fix login bug"])
+ */
 export function createTable(columns: TableColumn[]) {
   return new Table({
     head: columns.map((col) => col.header),

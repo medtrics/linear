@@ -1,27 +1,28 @@
 import { Command } from "commander"
 import {
-  handleError,
+  ERROR_CODES,
   LinearCLIError,
   linear,
   logInfo,
   logSuccess,
   showIssueDetails,
+  withErrorHandling,
 } from "../lib"
 
 export const moveIssueCommand = new Command("move-issue")
   .description("Move an issue to a different state")
   .argument("<issueId>", "Issue ID (e.g., M2-123)")
   .argument("<state>", "Target state (e.g., 'In Progress', 'Done')")
-  .action(async (issueId, stateName) => {
-    try {
+  .action(
+    withErrorHandling(async (issueId, stateName) => {
       // Get the issue first to ensure it exists
-      const issue = await linear.getIssue(issueId)
+      const issue = await linear.getIssueOrThrow(issueId)
       const team = await issue.team
 
       if (!team) {
         throw new LinearCLIError(
           "Could not find team for this issue",
-          "TEAM_NOT_FOUND",
+          ERROR_CODES.TEAM_NOT_FOUND,
         )
       }
 
@@ -39,7 +40,7 @@ export const moveIssueCommand = new Command("move-issue")
       if (!targetState) {
         throw new LinearCLIError(
           `State "${stateName}" not found in team`,
-          "STATE_NOT_FOUND",
+          ERROR_CODES.STATE_NOT_FOUND,
         )
       }
 
@@ -58,7 +59,5 @@ export const moveIssueCommand = new Command("move-issue")
         `Issue moved from "${currentState?.name || "Unknown"}" to "${targetState.name}"`,
       )
       logInfo(`${updatedIssue.identifier} - ${updatedIssue.title}`)
-    } catch (error) {
-      handleError(error)
-    }
-  })
+    }),
+  )

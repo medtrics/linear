@@ -1,10 +1,10 @@
 import { Command } from "commander"
-import { createTable, handleError, linear, log, logInfo } from "../lib"
+import { createTable, linear, log, logInfo, withErrorHandling } from "../lib"
 
 export const listIssuesCommand = new Command("list-issues")
   .description("List all issues from the Linear project")
-  .action(async () => {
-    try {
+  .action(
+    withErrorHandling(async () => {
       const project = await linear.getCurrentProject()
 
       // Fetch issues with all related data in a single query
@@ -47,7 +47,5 @@ export const listIssuesCommand = new Command("list-issues")
 
       logInfo(`Project: ${project.name} - ${issues.nodes.length} issues`)
       log(table.toString())
-    } catch (error) {
-      handleError(error)
-    }
-  })
+    }),
+  )

@@ -1,6 +1,16 @@
 import readline from "node:readline"
+import type { Issue } from "@linear/sdk"
 import { logDetail, logInfo } from "./output"
 
+/**
+ * Prompts user for yes/no confirmation
+ * @param message - The question to ask the user
+ * @returns true if user types 'y' (case-insensitive), false for any other input
+ * @example
+ * if (await askConfirmation("Delete issue?")) {
+ *   // proceed with deletion
+ * }
+ */
 export function askConfirmation(message: string): Promise<boolean> {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -13,12 +23,6 @@ export function askConfirmation(message: string): Promise<boolean> {
       resolve(answer.toLowerCase() === "y")
     })
   })
-}
-
-interface Issue {
-  identifier: string
-  title: string
-  url: string
 }
 
 export function showIssueDetails(issue: Issue, action: string) {

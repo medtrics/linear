@@ -1,6 +1,7 @@
 import { config as loadEnv } from "dotenv"
 import { assertConfig } from "./errors"
 
+// Load environment variables
 loadEnv({ path: ".env.local" })
 
 const apiKey = process.env.LINEAR_API_KEY
